@@ -1,5 +1,5 @@
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.Assert.*
 
 class MainClassTest : MainClass() {
 
@@ -19,5 +19,16 @@ class MainClassTest : MainClass() {
         val checkClassNumber = 45
 
         assertTrue("$classNumber not more $checkClassNumber", classNumber > checkClassNumber)
+    }
+
+    @Test
+    fun  testGetClassString() {
+
+        val classString = super.getClassString()
+        val checkClassString1 = "hello"
+        val checkClassString2 = "Hello"
+
+        assertTrue("$classString not include $checkClassString1 or $checkClassString2",
+            classString.contains(checkClassString1) || classString.contains(checkClassString2))
     }
 }
