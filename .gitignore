@@ -13,3 +13,8 @@ buildNumber.properties
 *.iml
 .idea
 out
+/src/test/kotlin/CoreTestCase.kt
+/src/main/kotlin/org/example/Hello.kt
+/src/test/kotlin/org/example/HelloTest.kt
+/src/test/kotlin/MainTest.kt
+/src/test/kotlin/MathHelper.kt
