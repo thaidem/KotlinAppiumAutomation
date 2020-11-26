@@ -10,5 +10,6 @@ class MainClassTest : MainClass() {
         val localNumber = super.getLocalNumber()
 
         assertTrue("$localNumber != $checkLocalNumber", super.getLocalNumber() == checkLocalNumber)
+
     }
 }
