@@ -28,7 +28,7 @@ class MainClassTest : MainClass() {
         val checkClassString1 = "hello"
         val checkClassString2 = "Hello"
 
-        assertTrue("$classString not include $checkClassString1 or $checkClassString2",
+        assertTrue("$classString not include $checkClassString1 and $checkClassString2",
             classString.contains(checkClassString1) || classString.contains(checkClassString2))
     }
 }
