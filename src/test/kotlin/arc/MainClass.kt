@@ -1,3 +1,5 @@
+package arc
+
 open class MainClass {
 
     private val class_number = 20
