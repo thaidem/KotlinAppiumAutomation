@@ -130,6 +130,22 @@ open class FirstTest  {
             articleTitle)
     }
 
+    @Test
+    fun testAssertElementHasText() {
+        waitForElementAndClick(
+            By.id("org.wikipedia:id/search_container"),
+            "Cannot find 'Search Wikipedia' input",
+            5
+        )
+
+        assertElementHasText(
+            By.id("org.wikipedia:id/search_src_text"),
+            "Search…",
+            "Element does not contain expected text"
+        )
+    }
+
+
     private fun waitForElementPresent(by: By, errorMessage: String, timeoutInSeconds: Long): WebElement? {
         val wait = WebDriverWait(driver, timeoutInSeconds)
         wait.withMessage("$errorMessage \n")
@@ -163,4 +179,11 @@ open class FirstTest  {
         element?.clear()
         return element
     }
+
+    private fun assertElementHasText(by: By, value: String, errorMessage: String ) {
+        val element = waitForElementPresent(by, "Element not find")
+        val textElement = element?.getAttribute("text")
+        Assert.assertEquals(errorMessage, value, textElement)
+    }
+
 }
