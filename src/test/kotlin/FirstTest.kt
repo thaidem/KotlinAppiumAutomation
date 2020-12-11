@@ -1,6 +1,7 @@
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import junit.framework.Assert.assertEquals
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -145,6 +146,34 @@ open class FirstTest  {
         )
     }
 
+    @Test
+    fun testCancelSearchAndCleaningResult() {
+        waitForElementAndClick(
+            By.id("org.wikipedia:id/search_container"),
+            "Cannot find 'Search Wikipedia' input",
+            5
+        )
+
+        waitForElementAndSendKeys(
+            By.xpath("//*[contains(@text, 'Search…')]"),
+            "Kotlin",
+            "Cannot find search input",
+            5
+        )
+
+        checkItemsAppeared(By.id("org.wikipedia:id/page_list_item_container")
+            ,"Articles not visible")
+
+        waitForElementAndClick(
+            By.id("org.wikipedia:id/search_close_btn"),
+            "Cannot find X cancel search",
+            5
+        )
+
+        checkItemsDisappeared(By.id("org.wikipedia:id/page_list_item_container")
+            ,"Articles visible")
+    }
+
 
     private fun waitForElementPresent(by: By, errorMessage: String, timeoutInSeconds: Long): WebElement? {
         val wait = WebDriverWait(driver, timeoutInSeconds)
@@ -185,5 +214,18 @@ open class FirstTest  {
         val textElement = element?.getAttribute("text")
         Assert.assertEquals(errorMessage, value, textElement)
     }
+
+    private fun checkItemsAppeared(by: By, errorMessage: String) {
+        val flag = driver?.findElements(by)?.isNotEmpty()
+        assertEquals(errorMessage, flag, true)
+
+    }
+
+    private fun checkItemsDisappeared(by: By, errorMessage: String) {
+        val flag = driver?.findElements(by)?.isEmpty()
+        assertEquals(errorMessage, flag, true)
+    }
+
+
 
 }
