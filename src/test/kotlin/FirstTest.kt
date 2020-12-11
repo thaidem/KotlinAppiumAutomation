@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.net.URL
 import java.util.concurrent.TimeUnit
+import kotlin.test.assertTrue
 
 open class FirstTest  {
       private var driver: AppiumDriver<MobileElement>? = null
@@ -174,11 +175,38 @@ open class FirstTest  {
             ,"Articles visible")
     }
 
+    @Test
+    fun testCheckWordsInResult() {
+        waitForElementAndClick(
+            By.id("org.wikipedia:id/search_container"),
+            "Cannot find 'Search Wikipedia' input",
+            5
+        )
+
+        waitForElementAndSendKeys(
+            By.xpath("//*[contains(@text, 'Search…')]"),
+            "Kotlin",
+            "Cannot find search input",
+            5
+        )
+
+        checkWordsInResult(By.id("org.wikipedia:id/page_list_item_title"),
+            "Kotlin",
+            "No items with this locator found",
+            5)
+    }
+
 
     private fun waitForElementPresent(by: By, errorMessage: String, timeoutInSeconds: Long): WebElement? {
         val wait = WebDriverWait(driver, timeoutInSeconds)
         wait.withMessage("$errorMessage \n")
         return wait.until(ExpectedConditions.presenceOfElementLocated(by))
+    }
+
+    private fun waitForAllElementsPresent(by: By, errorMessage: String, timeoutInSeconds: Long): MutableList<WebElement>? {
+        val wait = WebDriverWait(driver, timeoutInSeconds)
+        wait.withMessage("$errorMessage \n")
+        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by))
     }
 
     private fun waitForElementPresent(by: By, errorMessage: String): WebElement? {
@@ -212,7 +240,7 @@ open class FirstTest  {
     private fun assertElementHasText(by: By, value: String, errorMessage: String ) {
         val element = waitForElementPresent(by, "Element not find")
         val textElement = element?.getAttribute("text")
-        Assert.assertEquals(errorMessage, value, textElement)
+        assertEquals(errorMessage, value, textElement)
     }
 
     private fun checkItemsAppeared(by: By, errorMessage: String) {
@@ -226,6 +254,14 @@ open class FirstTest  {
         assertEquals(errorMessage, flag, true)
     }
 
-
-
+    private fun checkWordsInResult(by: By, value: String, errorMessage: String, timeoutInSeconds: Long) {
+        val elements = waitForAllElementsPresent(by, errorMessage, timeoutInSeconds)
+        elements?.forEach {
+            println(it.getAttribute("text"))
+            assertTrue(
+                value in it.getAttribute("text"),
+                "String '${it.getAttribute("text")}' does not contain '$value'"
+            )
+        }
+    }
 }
