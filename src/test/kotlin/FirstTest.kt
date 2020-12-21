@@ -39,6 +39,12 @@ open class FirstTest {
 
     @After
     fun tearDown() {
+        val width = driver?.manage()?.window()?.size?.getWidth()?: 0
+        val height = driver?.manage()?.window()?.size?.getHeight()?: 0
+        println("Width $width, height $height")
+        if ( width > height) {
+            driver?.rotate(ScreenOrientation.PORTRAIT)
+        }
         driver?.quit() ?: throw Exception("Driver instance was unable to quit.")
     }
 
@@ -440,7 +446,7 @@ open class FirstTest {
 
         driver?.rotate(ScreenOrientation.LANDSCAPE)
 
-        val titleAfterRotation = waitForElementAndGetAttribute(
+            val titleAfterRotation = waitForElementAndGetAttribute(
             By.id("org.wikipedia:id/view_page_title_text"),
             "text",
             "Cannot find title of article",
@@ -452,19 +458,19 @@ open class FirstTest {
             titleBeforeRotation,
             titleAfterRotation )
 
-        driver?.rotate(ScreenOrientation.PORTRAIT)
-
-        val titleAfterSecondRotation = waitForElementAndGetAttribute(
-            By.id("org.wikipedia:id/view_page_title_text"),
-            "text",
-            "Cannot find title of article",
-            15
-        )
-
-        assertEquals(
-            "Article title have been changed after second screen rotation",
-            titleBeforeRotation,
-            titleAfterSecondRotation )
+//        driver?.rotate(ScreenOrientation.PORTRAIT)
+//
+//        val titleAfterSecondRotation = waitForElementAndGetAttribute(
+//            By.id("org.wikipedia:id/view_page_title_text"),
+//            "text",
+//            "Cannot find title of article",
+//            15
+//        )
+//
+//        assertEquals(
+//            "Article title have been changed after second screen rotation",
+//            titleBeforeRotation,
+//            titleAfterSecondRotation )
     }
 
     @Test
@@ -597,7 +603,6 @@ open class FirstTest {
         )
 
         val onBoardingButton  = By.id("org.wikipedia:id/onboarding_button")
-
 
         if (checkItemsDisappeared(onBoardingButton)) {
             waitForElementAndClick(
@@ -779,8 +784,6 @@ open class FirstTest {
     private fun checkItemsDisappeared(by: By): Boolean {
         return driver?.findElements(by)?.isEmpty()!!
     }
-
-
 
     private fun checkWordsInResult(by: By, value: String, errorMessage: String, timeoutInSeconds: Long) {
         val elements = waitForAllElementsPresent(by, errorMessage, timeoutInSeconds)
