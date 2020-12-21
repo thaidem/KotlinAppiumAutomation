@@ -498,6 +498,148 @@ open class FirstTest {
         )
     }
 
+    @Test
+    fun saveTwoArticlesAndDeleteOneArticle() {
+
+        val request = "Java"
+        val articleTitle1 = "JavaScript"
+        val articleTitle2 = "Java (programming language)"
+        val nameFolder = "Learning programming"
+
+        inputSearchRequest(request)
+        selectAndSaveArticle(articleTitle1, nameFolder)
+
+        inputSearchRequest(request)
+        selectAndSaveArticle(articleTitle2, nameFolder)
+
+        waitForElementAndClick(
+            By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+            "Cannot find navigation button 'Me List'",
+            5
+        )
+
+        waitForElementAndClick(
+            By.xpath("//*[@text='$nameFolder']"),
+            "Cannot find created folder",
+            10
+        )
+
+        swipeElementToLeft(
+            By.xpath("//*[@text='$articleTitle1']"),
+            "Cannot find saved article '$articleTitle1'"
+        )
+
+        waitForElementNotPresent(
+            By.xpath("//*[@text='$articleTitle1']"),
+            "Cannot delete saved article '$articleTitle1'",
+            5
+        )
+
+        waitForElementAndClick(
+            By.xpath("//*[@text='$articleTitle2']"),
+            "Cannot find saved article '$articleTitle2'",
+            5
+        )
+
+        val openedArticleTitle  = waitForElementAndGetAttribute(
+            By.id("org.wikipedia:id/view_page_title_text"),
+            "text",
+            "Cannot find title of article",
+            15
+        )
+
+        assertEquals(
+            "Article title have been changed after open",
+            articleTitle2,
+            openedArticleTitle)
+    }
+
+    private fun inputSearchRequest(request: String) {
+
+        waitForElementAndClick(
+            By.id("org.wikipedia:id/search_container"),
+            "Cannot find 'Search Wikipedia' input",
+            5
+        )
+
+        waitForElementAndSendKeys(
+            By.xpath("//*[contains(@text, 'Search…')]"),
+            request,
+            "Cannot find search input",
+            5
+        )
+    }
+
+    private fun selectAndSaveArticle(articleTitle: String, nameFolder: String) {
+
+        waitForElementAndClick(
+            By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, '$articleTitle')]"),
+            "Cannot find article",
+            5
+        )
+
+        waitForElementPresent(
+            By.id("org.wikipedia:id/view_page_title_text"),
+            "Cannot find article title",
+            15
+        )
+
+        waitForElementAndClick(
+            By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+            "Cannot find button to open article options",
+            5
+        )
+
+        waitForElementAndClick(
+            By.xpath("//*[@text='Add to reading list']"),
+            "Cannot find option to 'Add to reading list'",
+            5
+        )
+
+        val onBoardingButton  = By.id("org.wikipedia:id/onboarding_button")
+
+
+        if (checkItemsDisappeared(onBoardingButton)) {
+            waitForElementAndClick(
+                By.xpath("//android.widget.TextView[@text='$nameFolder']"),
+                "Cannot find '$nameFolder' folder",
+                5
+            )
+
+        } else {
+            waitForElementAndClick(
+                onBoardingButton,
+                "Cannot find 'Got it' tip overlay",
+                5
+            )
+
+            waitForElementAndClear(
+                By.id("org.wikipedia:id/text_input"),
+                "Cannot find input to set name articles folder",
+                5
+            )
+
+            waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                nameFolder,
+                "Cannot put text into articles folder input",
+                5
+            )
+
+            waitForElementAndClick(
+                By.xpath("//*[@text='OK']"),
+                "Cannot press button 'OK'",
+                5
+            )
+        }
+
+        waitForElementAndClick(
+            By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+            "Cannot close article, cannot find X link",
+            10
+        )
+    }
+
 
     private fun waitForElementAndGetAttribute(
         by: By,attribute: String, errorMessage: String, timeoutInSeconds: Long): String? {
@@ -531,12 +673,10 @@ open class FirstTest {
         val action = TouchAction(driver)
         action
             .press(rightX, middleY)
-            .waitAction(300)
+            .waitAction(2000)
             .moveTo(leftX, middleY)
             .release()
             .perform()
-
-
     }
 
     protected fun swipeUp(timeOfSwipe: Int) {
@@ -635,6 +775,12 @@ open class FirstTest {
         val flag = driver?.findElements(by)?.isEmpty()
         assertEquals(errorMessage, flag, true)
     }
+
+    private fun checkItemsDisappeared(by: By): Boolean {
+        return driver?.findElements(by)?.isEmpty()!!
+    }
+
+
 
     private fun checkWordsInResult(by: By, value: String, errorMessage: String, timeoutInSeconds: Long) {
         val elements = waitForAllElementsPresent(by, errorMessage, timeoutInSeconds)
