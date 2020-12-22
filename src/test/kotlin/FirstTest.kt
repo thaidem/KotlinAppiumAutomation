@@ -34,17 +34,17 @@ open class FirstTest {
 
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
         (driver as AndroidDriver<MobileElement>).manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS)
+        val width = driver?.manage()?.window()?.size?.getWidth()?: 0
+        val height = driver?.manage()?.window()?.size?.getHeight()?: 0
+        println("width $width, height $height")
+        if ( width > height) driver?.rotate(ScreenOrientation.PORTRAIT)
+
 //        WebDriverRunner.setWebDriver(driver)
     }
 
     @After
     fun tearDown() {
-        val width = driver?.manage()?.window()?.size?.getWidth()?: 0
-        val height = driver?.manage()?.window()?.size?.getHeight()?: 0
-        println("Width $width, height $height")
-        if ( width > height) {
-            driver?.rotate(ScreenOrientation.PORTRAIT)
-        }
+
         driver?.quit() ?: throw Exception("Driver instance was unable to quit.")
     }
 
@@ -604,13 +604,12 @@ open class FirstTest {
 
         val onBoardingButton  = By.id("org.wikipedia:id/onboarding_button")
 
-        if (checkItemsDisappeared(onBoardingButton)) {
+        if (checkItemsNotPresent(onBoardingButton)) {
             waitForElementAndClick(
                 By.xpath("//android.widget.TextView[@text='$nameFolder']"),
                 "Cannot find '$nameFolder' folder",
                 5
             )
-
         } else {
             waitForElementAndClick(
                 onBoardingButton,
@@ -678,7 +677,7 @@ open class FirstTest {
         val action = TouchAction(driver)
         action
             .press(rightX, middleY)
-            .waitAction(2000)
+            .waitAction(40000)
             .moveTo(leftX, middleY)
             .release()
             .perform()
@@ -781,8 +780,12 @@ open class FirstTest {
         assertEquals(errorMessage, flag, true)
     }
 
-    private fun checkItemsDisappeared(by: By): Boolean {
+    private fun checkItemsNotPresent(by: By): Boolean {
         return driver?.findElements(by)?.isEmpty()!!
+    }
+
+    private fun checkItemPresent(by: By): Boolean {
+        return driver?.findElement(by)?.isDisplayed!!
     }
 
     private fun checkWordsInResult(by: By, value: String, errorMessage: String, timeoutInSeconds: Long) {
