@@ -33,7 +33,7 @@ open class FirstTest {
         capabilities.setCapability("app", "C:/Develop/KotlinAppiumAutomation/apks/org.wikipedia.apk")
 
         driver = AndroidDriver(URL("http://127.0.0.1:4723/wd/hub"), capabilities)
-        (driver as AndroidDriver<MobileElement>).manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS)
+//        (driver as AndroidDriver<MobileElement>).manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS)
         val width = driver?.manage()?.window()?.size?.getWidth()?: 0
         val height = driver?.manage()?.window()?.size?.getHeight()?: 0
         println("width $width, height $height")
@@ -173,8 +173,9 @@ open class FirstTest {
             5
         )
 
-        checkItemsAppeared(
-            By.id("org.wikipedia:id/page_list_item_container"), "Articles not visible"
+        checkElementsPresent(
+            By.id("org.wikipedia:id/page_list_item_container"),
+            "Articles not visible"
         )
 
         waitForElementAndClick(
@@ -183,8 +184,9 @@ open class FirstTest {
             5
         )
 
-        checkItemsDisappeared(
-            By.id("org.wikipedia:id/page_list_item_container"), "Articles visible"
+        checkElementsNotPresent(
+            By.id("org.wikipedia:id/page_list_item_container"),
+            "Articles visible"
         )
     }
 
@@ -505,7 +507,7 @@ open class FirstTest {
     }
 
     @Test
-    fun saveTwoArticlesAndDeleteOneArticle() {
+    fun testSaveTwoArticlesAndDeleteOneArticle() {
 
         val request = "Java"
         val articleTitle1 = "JavaScript"
@@ -558,6 +560,25 @@ open class FirstTest {
             "Article title have been changed after open",
             articleTitle2,
             openedArticleTitle)
+    }
+
+    @Test
+    fun testCheckTitlePresent() {
+        val request = "Java"
+        val articleTitle = "Java (programming language)"
+
+        inputSearchRequest(request)
+
+        waitForElementAndClick(
+            By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, '$articleTitle')]"),
+            "Cannot find article",
+            5
+        )
+
+        checkElementsPresent(
+            By.id("org.wikipedia:id/view_page_title_text"),
+            "Cannot find article title"
+        )
     }
 
     private fun inputSearchRequest(request: String) {
@@ -769,13 +790,13 @@ open class FirstTest {
         assertEquals(errorMessage, value, textElement)
     }
 
-    private fun checkItemsAppeared(by: By, errorMessage: String) {
+    private fun checkElementsPresent(by: By, errorMessage: String) {
         val flag = driver?.findElements(by)?.isNotEmpty()
+        println( driver?.findElements(by)?.toList())
         assertEquals(errorMessage, flag, true)
-
     }
 
-    private fun checkItemsDisappeared(by: By, errorMessage: String) {
+    private fun checkElementsNotPresent(by: By, errorMessage: String) {
         val flag = driver?.findElements(by)?.isEmpty()
         assertEquals(errorMessage, flag, true)
     }
@@ -784,7 +805,7 @@ open class FirstTest {
         return driver?.findElements(by)?.isEmpty()!!
     }
 
-    private fun checkItemPresent(by: By): Boolean {
+    private fun checkElementPresent(by: By): Boolean {
         return driver?.findElement(by)?.isDisplayed!!
     }
 
