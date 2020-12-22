@@ -14,7 +14,6 @@ import org.openqa.selenium.remote.DesiredCapabilities
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.net.URL
-import java.util.concurrent.TimeUnit
 import kotlin.test.assertTrue
 
 open class FirstTest {
@@ -173,7 +172,7 @@ open class FirstTest {
             5
         )
 
-        checkElementsPresent(
+        assertElementsPresent(
             By.id("org.wikipedia:id/page_list_item_container"),
             "Articles not visible"
         )
@@ -184,7 +183,7 @@ open class FirstTest {
             5
         )
 
-        checkElementsNotPresent(
+        assertElementsNotPresent(
             By.id("org.wikipedia:id/page_list_item_container"),
             "Articles visible"
         )
@@ -575,7 +574,7 @@ open class FirstTest {
             5
         )
 
-        checkElementsPresent(
+        assertElementsPresent(
             By.id("org.wikipedia:id/view_page_title_text"),
             "Cannot find article title"
         )
@@ -625,7 +624,7 @@ open class FirstTest {
 
         val onBoardingButton  = By.id("org.wikipedia:id/onboarding_button")
 
-        if (checkItemsNotPresent(onBoardingButton)) {
+        if (checkElementsNotPresent(onBoardingButton)) {
             waitForElementAndClick(
                 By.xpath("//android.widget.TextView[@text='$nameFolder']"),
                 "Cannot find '$nameFolder' folder",
@@ -790,23 +789,23 @@ open class FirstTest {
         assertEquals(errorMessage, value, textElement)
     }
 
-    private fun checkElementsPresent(by: By, errorMessage: String) {
+    private fun assertElementsPresent(by: By, errorMessage: String) {
         val flag = driver?.findElements(by)?.isNotEmpty()
         println( driver?.findElements(by)?.toList())
         assertEquals(errorMessage, flag, true)
     }
 
-    private fun checkElementsNotPresent(by: By, errorMessage: String) {
+    private fun checkElementsPresent(by: By): Boolean {
+        return driver?.findElements(by)?.isNotEmpty()!!
+    }
+
+    private fun assertElementsNotPresent(by: By, errorMessage: String) {
         val flag = driver?.findElements(by)?.isEmpty()
         assertEquals(errorMessage, flag, true)
     }
 
-    private fun checkItemsNotPresent(by: By): Boolean {
+    private fun checkElementsNotPresent(by: By): Boolean {
         return driver?.findElements(by)?.isEmpty()!!
-    }
-
-    private fun checkElementPresent(by: By): Boolean {
-        return driver?.findElement(by)?.isDisplayed!!
     }
 
     private fun checkWordsInResult(by: By, value: String, errorMessage: String, timeoutInSeconds: Long) {
