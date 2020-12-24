@@ -17,7 +17,6 @@
         <junit.version>4.12</junit.version>
         <java-client.version>4.1.2</java-client.version>
         <selenide.version>5.15.0</selenide.version>
-
     </properties>
 
     <dependencies>
