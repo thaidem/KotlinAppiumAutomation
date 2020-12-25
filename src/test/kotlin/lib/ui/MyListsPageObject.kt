@@ -2,6 +2,7 @@ package lib.ui
 
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
+import lib.ui.MyListsPageObject.MyListsLocators.*
 import org.openqa.selenium.By
 
 class MyListsPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver)
@@ -15,11 +16,11 @@ class MyListsPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(d
     /*TEMPLATES METHODS*/
     private fun getFolderXpathByName(nameFolder: String ):String
     {
-        return MyListsLocators.FOLDER_BY_NAME_TPL.locator.replace("{FOLDER_NAME}", nameFolder)
+        return FOLDER_BY_NAME_TPL.locator.replace("{FOLDER_NAME}", nameFolder)
     }
-    private fun getSavedArticleXpathByTitle(articleTitle: String?): String
+    private fun getSavedArticleXpathByTitle(articleTitle: String): String
     {
-        return MyListsLocators. ARTICLE_BY_TITLE_TPL.locator.replace("{TITLE}", articleTitle.toString())
+        return ARTICLE_BY_TITLE_TPL.locator.replace("{TITLE}", articleTitle)
     }
     /*TEMPLATES METHODS*/
 
@@ -29,7 +30,7 @@ class MyListsPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(d
         this.waitForElementAndClick(By.xpath(folderNameXpath),"Cannot find folder by name $nameFolder",5)
     }
 
-    fun swipeByArticleToDelete(articleTitle: String?)
+    fun swipeByArticleToDelete(articleTitle: String)
     {
         this.waitForArticleToAppearByTitle(articleTitle)
         val articleTitleXpath = getSavedArticleXpathByTitle(articleTitle)
@@ -37,15 +38,22 @@ class MyListsPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(d
         this.waitForArticleToDisappearByTitle(articleTitle)
     }
 
-    private fun waitForArticleToAppearByTitle(articleTitle: String?)
+    private fun waitForArticleToAppearByTitle(articleTitle: String)
     {
         val articleTitleXpath = getSavedArticleXpathByTitle(articleTitle)
         this.waitForElementPresent(By.xpath(articleTitleXpath),"Cannot find saved article by title $articleTitle",15)
     }
 
-    private fun waitForArticleToDisappearByTitle(articleTitle: String?)
+    private fun waitForArticleToDisappearByTitle(articleTitle: String)
     {
         val articleTitleXpath = getSavedArticleXpathByTitle(articleTitle)
         this.waitForElementNotPresent(By.xpath(articleTitleXpath),"Saved article still present with title $articleTitle",15)
     }
+
+    fun openArticle(articleTitle: String)
+    {
+        val articleTitleXpath = getSavedArticleXpathByTitle(articleTitle)
+        this.waitForElementAndClick(By.xpath(articleTitleXpath),"Cannot find saved article '$articleTitle'",5)
+    }
+
 }

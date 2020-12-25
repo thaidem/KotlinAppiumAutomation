@@ -2,7 +2,6 @@ package lib.ui
 
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import lib.ui.SearchPageObject.SearchPageLocators
 import lib.ui.SearchPageObject.SearchPageLocators.*
 import org.openqa.selenium.By
 
@@ -15,14 +14,22 @@ class SearchPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(dr
         SEARCH_CANCEL_BUTTON("org.wikipedia:id/search_close_btn"),
         SEARCH_RESULT_BY_SUBSTRING_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, '{SUBSTRING}')]"),
         SEARCH_RESULT_ELEMENT("//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']"),
+        SEARCH_RESULT_BY_TITLE_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, '{TITLE}')]"),
         SEARCH_EMPTY_RESULT_ELEMENT("//*[contains(@text, 'No results found')]"),
-        VALUE_ATTRIBUTE_TEXT_SEARCH_INPUT("org.wikipedia:id/search_src_text")
+        SEARCH_INPUT_ID("org.wikipedia:id/search_src_text"),
+        SEARCH_RESULT_LIST("org.wikipedia:id/page_list_item_container"),
+        SEARCH_RESULT_TITLE_LIST("org.wikipedia:id/page_list_item_title")
     }
 
     /*TEMPLATES METHODS*/
     private fun getResultSearchElement(substring: String): String
     {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.locator.replace("{SUBSTRING}", substring)
+    }
+
+    private fun getResultSearchElementByTitle(title: String): String
+    {
+        return SEARCH_RESULT_BY_TITLE_TPL.locator.replace("{TITLE}", title)
     }
     /*TEMPLATES METHODS*/
 
@@ -35,6 +42,12 @@ class SearchPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(dr
     fun typeSearchLine(search_line: String)
     {
         this.waitForElementAndSendKeys(By.xpath(SEARCH_INPUT.locator), search_line, "Cannot find and type into search input", 5)
+    }
+
+    fun inputSearchRequest(request: String)
+    {
+        initSearchInput()
+        typeSearchLine(request)
     }
 
     fun waitForSearchResult(substring: String)
@@ -82,6 +95,27 @@ class SearchPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(dr
     }
 
     fun assertSearchLineText(textSearchLine: String) {
-        this.assertElementHasText(By.id(VALUE_ATTRIBUTE_TEXT_SEARCH_INPUT.locator), textSearchLine,"Element does not contain expected text")
+        this.assertElementHasText(By.id(SEARCH_INPUT_ID.locator), textSearchLine,"Element does not contain expected text")
+    }
+
+    fun  assertSearchResultListPresent()
+    {
+        this.assertElementsPresent(By.id(SEARCH_RESULT_LIST.locator),"Articles not visible")
+    }
+
+    fun  assertSearchResultListNotPresent()
+    {
+       this.assertElementsNotPresent(By.id(SEARCH_RESULT_LIST.locator),"Articles visible")
+    }
+
+    fun checkWordsInEachItemsOfSearchResult(request: String)
+    {
+        this.checkWordsInResult(By.id(SEARCH_RESULT_TITLE_LIST.locator), request,"Cannot find request '$request' into each result items",5)
+    }
+
+    fun clickByArticleWithTitle(articleTitle: String)
+    {
+        val searchResultByTitleXpath = getResultSearchElementByTitle(articleTitle)
+        this.waitForElementAndClick(By.xpath(searchResultByTitleXpath),"Cannot find article by title '$articleTitle'",5)
     }
 }

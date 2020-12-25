@@ -12,90 +12,6 @@ import kotlin.test.assertTrue
 
 open class MainPageObject(private val driver: AppiumDriver<MobileElement>?) {
 
-    fun inputSearchRequest(request: String) {
-
-        waitForElementAndClick(
-            By.id("org.wikipedia:id/search_container"),
-            "Cannot find 'Search Wikipedia' input",
-            5
-        )
-
-        waitForElementAndSendKeys(
-            By.xpath("//*[contains(@text, 'Search…')]"),
-            request,
-            "Cannot find search input",
-            5
-        )
-    }
-
-    fun selectAndSaveArticle(articleTitle: String, nameFolder: String) {
-
-        waitForElementAndClick(
-            By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, '$articleTitle')]"),
-            "Cannot find article",
-            5
-        )
-
-        waitForElementPresent(
-            By.id("org.wikipedia:id/view_page_title_text"),
-            "Cannot find article title",
-            20
-        )
-
-        waitForElementAndClick(
-            By.xpath("//android.widget.ImageView[@content-desc='More options']"),
-            "Cannot find button to open article options",
-            5
-        )
-
-        waitForElementAndClick(
-            By.xpath("//*[@text='Add to reading list']"),
-            "Cannot find option to 'Add to reading list'",
-            5
-        )
-
-        val onBoardingButton  = By.id("org.wikipedia:id/onboarding_button")
-
-        if (checkElementsNotPresent(onBoardingButton)) {
-            waitForElementAndClick(
-                By.xpath("//android.widget.TextView[@text='$nameFolder']"),
-                "Cannot find '$nameFolder' folder",
-                5
-            )
-        } else {
-            waitForElementAndClick(
-                onBoardingButton,
-                "Cannot find 'Got it' tip overlay",
-                5
-            )
-
-            waitForElementAndClear(
-                By.id("org.wikipedia:id/text_input"),
-                "Cannot find input to set name articles folder",
-                5
-            )
-
-            waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/text_input"),
-                nameFolder,
-                "Cannot put text into articles folder input",
-                5
-            )
-
-            waitForElementAndClick(
-                By.xpath("//*[@text='OK']"),
-                "Cannot press button 'OK'",
-                5
-            )
-        }
-
-        waitForElementAndClick(
-            By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
-            "Cannot close article, cannot find X link",
-            10
-        )
-    }
-
     fun waitForElementAndGetAttribute(
         by: By, attribute: String, errorMessage: String, timeoutInSeconds: Long): String? {
         val element = waitForElementPresent(by, errorMessage, timeoutInSeconds)
@@ -170,7 +86,7 @@ open class MainPageObject(private val driver: AppiumDriver<MobileElement>?) {
         return wait.until(ExpectedConditions.presenceOfElementLocated(by))
     }
 
-    fun waitForAllElementsPresent(
+    private fun waitForAllElementsPresent(
         by: By,
         errorMessage: String,
         timeoutInSeconds: Long
@@ -221,7 +137,6 @@ open class MainPageObject(private val driver: AppiumDriver<MobileElement>?) {
 
     fun assertElementsPresent(by: By, errorMessage: String) {
         val flag = driver?.findElements(by)?.isNotEmpty()
-        println( driver?.findElements(by)?.toList())
         TestCase.assertEquals(errorMessage, flag, true)
     }
 

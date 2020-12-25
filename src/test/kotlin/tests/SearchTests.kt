@@ -52,4 +52,38 @@ class SearchTests : CoreTestCase()
         searchPageObject.waitForEmptyResultLabel()
         searchPageObject.assertThereIsNotResultOfSearch()
     }
+
+    @Test
+    fun testAssertElementHasText()
+    {
+        val searchPageObject = SearchPageObject(driver)
+        val textSearchLine = "Search…"
+
+        searchPageObject.initSearchInput()
+        searchPageObject.assertSearchLineText(textSearchLine)
+    }
+
+    @Test
+    fun testCancelSearchAndCleaningResult()
+    {
+        val searchPageObject = SearchPageObject(driver)
+
+        searchPageObject.initSearchInput()
+        searchPageObject.typeSearchLine("Kotlin")
+        searchPageObject.assertSearchResultListPresent()
+        searchPageObject.clickCancelSearch()
+        searchPageObject.assertSearchResultListNotPresent()
+    }
+
+    @Test
+    fun testCheckWordsInResult()
+    {
+        val searchPageObject = SearchPageObject(driver)
+        val request = "Kotlin"
+
+        searchPageObject.initSearchInput()
+        searchPageObject.typeSearchLine(request)
+        searchPageObject.checkWordsInEachItemsOfSearchResult(request)
+    }
+
 }

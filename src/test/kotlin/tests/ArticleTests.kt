@@ -30,12 +30,27 @@ class ArticleTests : CoreTestCase()
     fun testSwipeArticle()
     {
         val searchPageObject = SearchPageObject(driver)
-        val articlePageObject = ArticlePageObject(driver)
-
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Appium")
         searchPageObject.clickByArticleWithSubstring("Appium")
+
+        val articlePageObject = ArticlePageObject(driver)
         articlePageObject.waitForTitleElement()
         articlePageObject.swipeToFooter()
+    }
+
+    @Test
+    fun testCheckTitlePresent()
+    {
+        val searchPageObject = SearchPageObject(driver)
+        val request = "Java"
+        val articleTitle = "Java (programming language)"
+
+        searchPageObject.initSearchInput()
+        searchPageObject.typeSearchLine(request)
+        searchPageObject.clickByArticleWithTitle(articleTitle)
+
+        val articlePageObject = ArticlePageObject(driver)
+        articlePageObject.assertArticleTitlePresent()
     }
 }

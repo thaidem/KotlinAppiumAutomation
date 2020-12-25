@@ -17,7 +17,5 @@ class NavigationUI(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver
             By.xpath( NavigationLocators.MY_LISTS_LINK.locator),
             "Cannot find navigation button 'Me List'",
             5)
-
     }
-
 }
