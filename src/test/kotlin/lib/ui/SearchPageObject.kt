@@ -18,7 +18,11 @@ class SearchPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(dr
         SEARCH_EMPTY_RESULT_ELEMENT("//*[contains(@text, 'No results found')]"),
         SEARCH_INPUT_ID("org.wikipedia:id/search_src_text"),
         SEARCH_RESULT_LIST("org.wikipedia:id/page_list_item_container"),
-        SEARCH_RESULT_TITLE_LIST("org.wikipedia:id/page_list_item_title")
+        SEARCH_RESULT_TITLE_LIST("org.wikipedia:id/page_list_item_title"),
+        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, '{TITLE}') and contains(@text, '{DESCRIPTION}')]")
+//        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_container']/*[contains(@resource-id='org.wikipedia:id/page_list_item_title', '{TITLE}') and contains(@resource-id='org.wikipedia:id/page_list_item_description', '{DESCRIPTION}')]")
+//        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, '{TITLE}')]  AND " +
+//                "//*[@resource-id='org.wikipedia:id/page_list_item_description'][contains(@text, '{DESCRIPTION}')]")
     }
 
     /*TEMPLATES METHODS*/
@@ -30,6 +34,12 @@ class SearchPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(dr
     private fun getResultSearchElementByTitle(title: String): String
     {
         return SEARCH_RESULT_BY_TITLE_TPL.locator.replace("{TITLE}", title)
+    }
+
+    private fun getResultSearchElementByTitleAndDescription(title: String, description: String): String
+    {
+        val titlePart = SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL.locator.replace("{TITLE}", title)
+        return titlePart.replace("{DESCRIPTION}", description)
     }
     /*TEMPLATES METHODS*/
 
@@ -117,5 +127,12 @@ class SearchPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(dr
     {
         val searchResultByTitleXpath = getResultSearchElementByTitle(articleTitle)
         this.waitForElementAndClick(By.xpath(searchResultByTitleXpath),"Cannot find article by title '$articleTitle'",5)
+    }
+
+    fun  waitForElementByTitleAndDescription(title: String, description: String): Int?
+    {
+        val searchResultByTitleAndDescriptionXpath = getResultSearchElementByTitleAndDescription(title, description)
+        this.waitForElementPresent(By.xpath(searchResultByTitleAndDescriptionXpath),"Cannot find article by title '$title' and description '$description'",10)
+        return this.getAmountOfElements(By.xpath(searchResultByTitleAndDescriptionXpath))
     }
 }

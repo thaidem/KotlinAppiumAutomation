@@ -86,4 +86,17 @@ class SearchTests : CoreTestCase()
         searchPageObject.checkWordsInEachItemsOfSearchResult(request)
     }
 
+    @Test
+    fun testSearchArticlesByTitleAndDescription()
+    {
+        val searchPageObject = SearchPageObject(driver)
+        val title = "Java"
+        val description = "programming"
+
+        searchPageObject.initSearchInput()
+        searchPageObject.typeSearchLine("$title $description")
+        val amountOfElements = searchPageObject.waitForElementByTitleAndDescription(title, description)
+        println(amountOfElements)
+        assertTrue("Amount Of Elements less 3", amountOfElements ?: 0 >= 3)
+    }
 }
