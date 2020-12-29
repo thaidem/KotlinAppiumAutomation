@@ -19,10 +19,8 @@ class SearchPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(dr
         SEARCH_INPUT_ID("org.wikipedia:id/search_src_text"),
         SEARCH_RESULT_LIST("org.wikipedia:id/page_list_item_container"),
         SEARCH_RESULT_TITLE_LIST("org.wikipedia:id/page_list_item_title"),
-        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, '{TITLE}') and contains(@text, '{DESCRIPTION}')]")
-//        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_container']/*[contains(@resource-id='org.wikipedia:id/page_list_item_title', '{TITLE}') and contains(@resource-id='org.wikipedia:id/page_list_item_description', '{DESCRIPTION}')]")
-//        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_title'][contains(@text, '{TITLE}')]  AND " +
-//                "//*[@resource-id='org.wikipedia:id/page_list_item_description'][contains(@text, '{DESCRIPTION}')]")
+        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@resource-id='org.wikipedia:id/page_list_item_title' and contains(@text, '{TITLE}')]/following-sibling::*[@resource-id='org.wikipedia:id/page_list_item_description' and contains(@text, '{DESCRIPTION}')]")
+//        SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[contains(@text, '{TITLE}') and contains(@text, '{DESCRIPTION}')]")
     }
 
     /*TEMPLATES METHODS*/
