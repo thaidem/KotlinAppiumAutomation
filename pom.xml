@@ -12,18 +12,20 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.4.20</kotlin.version>
+        <kotlin.version>1.4.21</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
         <junit.version>4.12</junit.version>
-        <java-client.version>4.1.2</java-client.version>
-        <selenide.version>5.15.0</selenide.version>
+        <java-client.version>6.1.0</java-client.version>
+        <websocket-api.version>1.1</websocket-api.version>
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
         <dependency>
-            <groupId>com.codeborne</groupId>
-            <artifactId>selenide</artifactId>
-            <version>${selenide.version}</version>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>${websocket-api.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

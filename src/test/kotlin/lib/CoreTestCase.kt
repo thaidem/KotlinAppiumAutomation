@@ -7,6 +7,7 @@ import junit.framework.TestCase
 import org.openqa.selenium.ScreenOrientation
 import org.openqa.selenium.remote.DesiredCapabilities
 import java.net.URL
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 open class CoreTestCase : TestCase() {
@@ -26,6 +27,7 @@ open class CoreTestCase : TestCase() {
         capabilities.setCapability("appPackage", "org.wikipedia")
         capabilities.setCapability("appActivity", ".main.MainActivity")
         capabilities.setCapability("app", "C:/Develop/KotlinAppiumAutomation/apks/org.wikipedia.apk")
+//        capabilities.setCapability("app", "C:/Develop/KotlinAppiumAutomation/apks/Wikipedia.app")
 
         driver = AndroidDriver(URL(appiumUrl), capabilities)
         (driver as AndroidDriver<MobileElement>).manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS)
@@ -53,7 +55,7 @@ open class CoreTestCase : TestCase() {
         driver?.rotate(ScreenOrientation.LANDSCAPE)
     }
 
-    protected fun backgroundApp(seconds: Int) {
+    protected fun backgroundApp(seconds: Duration) {
         driver?.runAppInBackground(seconds)
     }
 }
