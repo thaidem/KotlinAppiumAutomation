@@ -2,7 +2,6 @@ package lib.ui
 
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import io.appium.java_client.android.AndroidTouchAction
 import io.appium.java_client.touch.WaitOptions
 import io.appium.java_client.touch.offset.PointOption
 import junit.framework.TestCase
@@ -16,24 +15,30 @@ import kotlin.test.assertTrue
 
 open class MainPageObject(private val driver: AppiumDriver<MobileElement>?) {
 
-    fun waitForElementAndGetAttribute(
-        by: By, attribute: String, errorMessage: String, timeoutInSeconds: Long): String? {
-        val element = waitForElementPresent(by, errorMessage, timeoutInSeconds)
+    fun waitForElementAndGetAttribute(locator: String, attribute: String, errorMessage: String, timeoutInSeconds: Long): String?
+    {
+        val element = waitForElementPresent(locator, errorMessage, timeoutInSeconds)
         return element?.getAttribute(attribute)
     }
 
-    fun assertElementNotPresent(by: By, errorMessage: String) {
-        val amountOfElement = getAmountOfElements(by)
+    fun assertElementNotPresent(locator: String, errorMessage: String)
+    {
+        val amountOfElement = getAmountOfElements(locator)
         if (amountOfElement ?: 0 > 0) {
-            val defaultMessage = "An element '$by' supposed to be not present"
+            val defaultMessage = "An element '$locator' supposed to be not present"
             throw AssertionError("$defaultMessage $errorMessage")
         }
     }
 
-    fun getAmountOfElements(by: By) = driver?.findElements(by)?.size
+    fun getAmountOfElements(locator: String): Int?
+    {
+        val by = this.getLocatorByString(locator)
+        return driver?.findElements(by)?.size
+    }
 
-    fun swipeElementToLeft(by: By, errorMessage: String) {
-        val element = waitForElementPresent(by, errorMessage, 10)
+    fun swipeElementToLeft(locator: String, errorMessage: String)
+    {
+        val element = waitForElementPresent(locator, errorMessage, 10)
         val leftX = element?.location?.getX()
         println(leftX)
         val rightX = leftX!! + element.size.getWidth()
@@ -44,7 +49,6 @@ open class MainPageObject(private val driver: AppiumDriver<MobileElement>?) {
         println(lowerY)
         val middleY = (upperY + lowerY) / 2
         println(middleY)
-//        val action = AndroidTouchAction(driver as PerformsTouchActions)
         val action = PlatformTouchAction(driver as AppiumDriver)
         action
             .press(PointOption.point(rightX, middleY))
@@ -54,10 +58,10 @@ open class MainPageObject(private val driver: AppiumDriver<MobileElement>?) {
             .perform()
     }
 
-    private fun swipeUp(timeOfSwipe: Long) {
-//        val action = AndroidTouchAction(driver as PerformsTouchActions)
+    private fun swipeUp(timeOfSwipe: Long)
+    {
         val action = PlatformTouchAction(driver as AppiumDriver)
-        val size = driver?.manage()?.window()?.size
+        val size = driver.manage()?.window()?.size
         val x: Int? = size?.width?.div(2)
         val startY = size?.height?.times(0.8)?.toInt()
         val endY = size?.height?.times(0.2)?.toInt()
@@ -71,102 +75,126 @@ open class MainPageObject(private val driver: AppiumDriver<MobileElement>?) {
 
     private fun swipeUpQuick() = swipeUp(300)
 
-    fun swipeUpToFindElement(by: By, errorMessage: String, maxSwipes: Int) {
+    fun swipeUpToFindElement(locator: String, errorMessage: String, maxSwipes: Int)
+    {
         var alreadySwiped = 0
 
-        while (driver?.findElements(by)?.size == 0) {
+        while (getAmountOfElements(locator) == 0) {
 
             if (alreadySwiped > maxSwipes) {
-                waitForElementPresent(by, "Cannot find element by swiping up.\n $errorMessage", 0)
+                waitForElementPresent(locator, "Cannot find element by swiping up.\n $errorMessage", 0)
                 return
             }
-
             swipeUpQuick()
             ++alreadySwiped
         }
     }
 
-    fun waitForElementPresent(by: By, errorMessage: String, timeoutInSeconds: Long): WebElement? {
+    fun waitForElementPresent(locator: String, errorMessage: String, timeoutInSeconds: Long): WebElement?
+    {
+        val by = this.getLocatorByString(locator)
         val wait = WebDriverWait(driver, timeoutInSeconds)
         wait.withMessage("$errorMessage \n")
         return wait.until(ExpectedConditions.presenceOfElementLocated(by))
     }
 
-    private fun waitForAllElementsPresent(
-        by: By,
-        errorMessage: String,
-        timeoutInSeconds: Long
-    ): MutableList<WebElement>? {
+    private fun waitForAllElementsPresent(locator: String, errorMessage: String, timeoutInSeconds: Long): MutableList<WebElement>?
+    {
+        val by = this.getLocatorByString(locator)
         val wait = WebDriverWait(driver, timeoutInSeconds)
         wait.withMessage("$errorMessage \n")
         return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by))
     }
 
-    fun waitForElementPresent(by: By, errorMessage: String): WebElement? {
-        return waitForElementPresent(by, errorMessage, 5)
+    fun waitForElementPresent(locator: String, errorMessage: String): WebElement?
+    {
+        return waitForElementPresent(locator, errorMessage, 5)
     }
 
-    fun waitForElementAndClick(by: By, errorMessage: String, timeoutInSeconds: Long): WebElement? {
-        val element = waitForElementPresent(by, errorMessage, timeoutInSeconds)
+    fun waitForElementAndClick(locator: String, errorMessage: String, timeoutInSeconds: Long): WebElement?
+    {
+        val element = waitForElementPresent(locator, errorMessage, timeoutInSeconds)
         element?.click()
         return element
     }
 
-    fun waitForElementAndSendKeys(
-        by: By,
-        value: String,
-        errorMessage: String,
-        timeoutInSeconds: Long
-    ): WebElement? {
-        val element = waitForElementPresent(by, errorMessage, timeoutInSeconds)
+    fun waitForElementAndSendKeys(locator: String, value: String, errorMessage: String, timeoutInSeconds: Long): WebElement?
+    {
+        val element = waitForElementPresent(locator, errorMessage, timeoutInSeconds)
         element?.sendKeys(value)
         return element
     }
 
-    fun waitForElementNotPresent(by: By, errorMessage: String, timeoutInSeconds: Long): Boolean {
+    fun waitForElementNotPresent(locator: String, errorMessage: String, timeoutInSeconds: Long): Boolean
+    {
+        val by = this.getLocatorByString(locator)
         val wait = WebDriverWait(driver, timeoutInSeconds)
         wait.withMessage("$errorMessage \n")
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by))
     }
 
-    fun waitForElementAndClear(by: By, errorMessage: String, timeoutInSeconds: Long): WebElement? {
-        val element = waitForElementPresent(by, errorMessage, timeoutInSeconds)
+    fun waitForElementAndClear(locator: String, errorMessage: String, timeoutInSeconds: Long): WebElement?
+    {
+        val element = waitForElementPresent(locator, errorMessage, timeoutInSeconds)
         element?.clear()
         return element
     }
 
-    fun assertElementHasText(by: By, value: String, errorMessage: String) {
-        val element = waitForElementPresent(by, "Element not find")
+    fun assertElementHasText(locator: String, value: String, errorMessage: String)
+    {
+        val element = waitForElementPresent(locator, "Element not find")
         val textElement = element?.getAttribute("text")
         TestCase.assertEquals(errorMessage, value, textElement)
     }
 
-    fun assertElementsPresent(by: By, errorMessage: String) {
+    fun assertElementsPresent(locator: String, errorMessage: String)
+    {
+        val by = this.getLocatorByString(locator)
         val flag = driver?.findElements(by)?.isNotEmpty()
         TestCase.assertEquals(errorMessage, flag, true)
     }
 
-    fun checkElementsPresent(by: By): Boolean {
+    fun checkElementsPresent(locator: String): Boolean
+    {
+        val by = this.getLocatorByString(locator)
         return driver?.findElements(by)?.isNotEmpty()!!
     }
 
-    fun assertElementsNotPresent(by: By, errorMessage: String) {
+    fun assertElementsNotPresent(locator: String, errorMessage: String)
+    {
+        val by = this.getLocatorByString(locator)
         val flag = driver?.findElements(by)?.isEmpty()
         TestCase.assertEquals(errorMessage, flag, true)
     }
 
-    fun checkElementsNotPresent(by: By): Boolean {
+    fun checkElementsNotPresent(locator: String): Boolean
+    {
+        val by = this.getLocatorByString(locator)
         return driver?.findElements(by)?.isEmpty()!!
     }
 
-    fun checkWordsInResult(by: By, value: String, errorMessage: String, timeoutInSeconds: Long) {
-        val elements = waitForAllElementsPresent(by, errorMessage, timeoutInSeconds)
+    fun checkWordsInResult(locator: String, value: String, errorMessage: String, timeoutInSeconds: Long)
+    {
+        val elements = waitForAllElementsPresent(locator, errorMessage, timeoutInSeconds)
         elements?.forEach {
             println(it.getAttribute("text"))
             assertTrue(
                 value in it.getAttribute("text"),
                 "String '${it.getAttribute("text")}' does not contain '$value'"
             )
+        }
+    }
+
+    private fun getLocatorByString(locatorWithType: String) : By
+    {
+        val explodedLocator  = locatorWithType.split("~")
+        val byType = explodedLocator[0]
+        val locator = explodedLocator[1]
+
+        return when (byType) {
+            "xpath" -> By.xpath(locator)
+            "id" -> By.id(locator)
+            else -> throw IllegalArgumentException("Cannot get type of locator. locator '$locator'")
         }
     }
 }
