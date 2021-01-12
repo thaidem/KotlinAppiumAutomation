@@ -1,8 +1,8 @@
 package tests
 
 import lib.CoreTestCase
-import lib.ui.ArticlePageObject
-import lib.ui.SearchPageObject
+import lib.ui.factories.ArticlePageObjectFactory
+import lib.ui.factories.SearchPageObjectFactory
 import org.junit.Test
 
 class ArticleTests : CoreTestCase()
@@ -10,12 +10,12 @@ class ArticleTests : CoreTestCase()
     @Test
     fun testCompareArticleTitle()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language")
 
-        val articlePageObject = ArticlePageObject(driver)
+        val articlePageObject = ArticlePageObjectFactory.get(driver)
         articlePageObject.waitForTitleElement()
         val articleTitle = articlePageObject.getArticleTitle()
 
@@ -29,12 +29,12 @@ class ArticleTests : CoreTestCase()
     @Test
     fun testSwipeArticle()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Appium")
         searchPageObject.clickByArticleWithSubstring("Appium")
 
-        val articlePageObject = ArticlePageObject(driver)
+        val articlePageObject = ArticlePageObjectFactory.get(driver)
         articlePageObject.waitForTitleElement()
         articlePageObject.swipeToFooter()
     }
@@ -42,7 +42,7 @@ class ArticleTests : CoreTestCase()
     @Test
     fun testCheckTitlePresent()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         val request = "Java"
         val articleTitle = "Java (programming language)"
 
@@ -50,7 +50,7 @@ class ArticleTests : CoreTestCase()
         searchPageObject.typeSearchLine(request)
         searchPageObject.clickByArticleWithTitle(articleTitle)
 
-        val articlePageObject = ArticlePageObject(driver)
+        val articlePageObject = ArticlePageObjectFactory.get(driver)
         articlePageObject.assertArticleTitlePresent()
     }
 }

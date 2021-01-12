@@ -1,8 +1,8 @@
 package tests
 
 import lib.CoreTestCase
-import lib.ui.ArticlePageObject
-import lib.ui.SearchPageObject
+import lib.ui.factories.ArticlePageObjectFactory
+import lib.ui.factories.SearchPageObjectFactory
 import org.junit.Test
 import java.time.Duration
 
@@ -11,12 +11,12 @@ class ChangeAppConditionTests : CoreTestCase()
     @Test
     fun testChangeScreenOrientationOnSearchResult()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language")
 
-        val articlePageObject = ArticlePageObject(driver)
+        val articlePageObject = ArticlePageObjectFactory.get(driver)
         val titleBeforeRotation = articlePageObject.getArticleTitle()
         this.rotateScreenLandscape()
         val titleAfterRotation = articlePageObject.getArticleTitle()
@@ -30,7 +30,7 @@ class ChangeAppConditionTests : CoreTestCase()
     @Test
     fun testCheckArticleInBackground()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")
         searchPageObject.waitForSearchResult("Object-oriented programming language")

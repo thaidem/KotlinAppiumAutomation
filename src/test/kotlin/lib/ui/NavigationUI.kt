@@ -2,17 +2,16 @@ package lib.ui
 
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import lib.ui.NavigationUI.NavigationLocators.MY_LISTS_LINK
 
-class NavigationUI(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver)
+abstract class NavigationUI(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver)
 {
-    enum class NavigationLocators(val locator: String)
+    protected companion object
     {
-        MY_LISTS_LINK("xpath~//android.widget.FrameLayout[@content-desc='My lists']")
+        var MY_LISTS_LINK = ""
 
     }
 
     fun clickMyLists() {
-        this.waitForElementAndClick(MY_LISTS_LINK.locator,"Cannot find navigation button 'Me List'",5)
+        this.waitForElementAndClick(MY_LISTS_LINK,"Cannot find navigation button 'Me List'",5)
     }
 }

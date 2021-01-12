@@ -2,25 +2,23 @@ package lib.ui
 
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
-import lib.ui.MyListsPageObject.MyListsLocators.ARTICLE_BY_TITLE_TPL
-import lib.ui.MyListsPageObject.MyListsLocators.FOLDER_BY_NAME_TPL
 
-class MyListsPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver)
+abstract class MyListsPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver)
 {
-    enum class MyListsLocators(val locator: String)
+    protected companion object
     {
-        FOLDER_BY_NAME_TPL("xpath~//*[@text='{FOLDER_NAME}']"),
-        ARTICLE_BY_TITLE_TPL("xpath~//*[@text='{TITLE}']")
+        var FOLDER_BY_NAME_TPL = ""
+        var ARTICLE_BY_TITLE_TPL = ""
     }
 
     /*TEMPLATES METHODS*/
     private fun getFolderXpathByName(nameFolder: String ):String
     {
-        return FOLDER_BY_NAME_TPL.locator.replace("{FOLDER_NAME}", nameFolder)
+        return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}", nameFolder)
     }
     private fun getSavedArticleXpathByTitle(articleTitle: String): String
     {
-        return ARTICLE_BY_TITLE_TPL.locator.replace("{TITLE}", articleTitle)
+        return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", articleTitle)
     }
     /*TEMPLATES METHODS*/
 

@@ -1,7 +1,7 @@
 package tests
 
 import lib.CoreTestCase
-import lib.ui.SearchPageObject
+import lib.ui.factories.SearchPageObjectFactory
 import org.junit.Test
 
 class SearchTests : CoreTestCase()
@@ -10,7 +10,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testSearch()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
 
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")
@@ -20,7 +20,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testCancelSearch()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
 
         searchPageObject.initSearchInput()
         searchPageObject.waitForCancelButtonToAppear()
@@ -31,7 +31,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testAmountOfNotEmptySearch() {
 
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         val searchLine = "Linkin Park Discography"
 
         searchPageObject.initSearchInput()
@@ -44,7 +44,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testAmountOfEmptySearch()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         val searchLine = "asfgdfhgjk43654"
 
         searchPageObject.initSearchInput()
@@ -56,7 +56,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testAssertElementHasText()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         val textSearchLine = "Search…"
 
         searchPageObject.initSearchInput()
@@ -66,7 +66,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testCancelSearchAndCleaningResult()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
 
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Kotlin")
@@ -78,7 +78,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testCheckWordsInResult()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         val request = "Kotlin"
 
         searchPageObject.initSearchInput()
@@ -89,7 +89,7 @@ class SearchTests : CoreTestCase()
     @Test
     fun testSearchArticlesByTitleAndDescription()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         val title = "Java"
         val description = "programming"
 

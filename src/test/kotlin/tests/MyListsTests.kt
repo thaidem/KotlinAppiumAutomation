@@ -1,10 +1,10 @@
 package tests
 
 import lib.CoreTestCase
-import lib.ui.ArticlePageObject
-import lib.ui.MyListsPageObject
-import lib.ui.NavigationUI
-import lib.ui.SearchPageObject
+import lib.ui.factories.ArticlePageObjectFactory
+import lib.ui.factories.MyListsPageObjectFactory
+import lib.ui.factories.NavigationUIFactory
+import lib.ui.factories.SearchPageObjectFactory
 import org.junit.Test
 
 class MyListsTests : CoreTestCase()
@@ -16,8 +16,8 @@ class MyListsTests : CoreTestCase()
         val articleTitle1 = "JavaScript"
         val articleTitle2 = "Java (programming language)"
         val nameFolder = "Learning programming"
-        val searchPageObject = SearchPageObject(driver)
-        val articlePageObject = ArticlePageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
+        val articlePageObject = ArticlePageObjectFactory.get(driver)
 
         searchPageObject.inputSearchRequest(request)
         searchPageObject.clickByArticleWithTitle(articleTitle1)
@@ -29,10 +29,10 @@ class MyListsTests : CoreTestCase()
         articlePageObject.addArticleToMyList(nameFolder)
         articlePageObject.closeArticle()
 
-        val navigationUI = NavigationUI(driver)
+        val navigationUI = NavigationUIFactory.get(driver)
         navigationUI.clickMyLists()
 
-        val myListsPageObject = MyListsPageObject(driver)
+        val myListsPageObject = MyListsPageObjectFactory.get(driver)
         myListsPageObject.openFolderByName(nameFolder)
         myListsPageObject.swipeByArticleToDelete(articleTitle1)
         myListsPageObject.openArticle(articleTitle2)
@@ -44,23 +44,23 @@ class MyListsTests : CoreTestCase()
     @Test
     fun testSaveFirstArticleToMyList()
     {
-        val searchPageObject = SearchPageObject(driver)
+        val searchPageObject = SearchPageObjectFactory.get(driver)
         val nameFolder = "Learning programming"
 
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language")
 
-        val articlePageObject = ArticlePageObject(driver)
+        val articlePageObject = ArticlePageObjectFactory.get(driver)
         articlePageObject.waitForTitleElement()
         val articleTitle = articlePageObject.getArticleTitle()
         articlePageObject.addArticleToMyList(nameFolder)
         articlePageObject.closeArticle()
 
-        val navigationUI = NavigationUI(driver)
+        val navigationUI = NavigationUIFactory.get(driver)
         navigationUI.clickMyLists()
 
-        val myListsPageObject = MyListsPageObject(driver)
+        val myListsPageObject = MyListsPageObjectFactory.get(driver)
         myListsPageObject.openFolderByName(nameFolder)
         myListsPageObject.swipeByArticleToDelete(articleTitle.toString())
     }
