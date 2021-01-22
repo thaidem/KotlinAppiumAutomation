@@ -1,10 +1,9 @@
 package lib.ui.ios
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
 import lib.ui.NavigationUI
+import org.openqa.selenium.remote.RemoteWebDriver
 
-class IOSNavigationUI(driver: AppiumDriver<MobileElement>?) : NavigationUI(driver)
+class IOSNavigationUI(driver: RemoteWebDriver?) : NavigationUI(driver)
 {
     // TODO: 12.01.2021  
 }

@@ -1,10 +1,9 @@
 package lib.ui.android
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
 import lib.ui.MyListsPageObject
+import org.openqa.selenium.remote.RemoteWebDriver
 
-open class AndroidMyListsPageObject(driver: AppiumDriver<MobileElement>?) : MyListsPageObject(driver)
+open class AndroidMyListsPageObject(driver: RemoteWebDriver?) : MyListsPageObject(driver)
 {
     init
     {

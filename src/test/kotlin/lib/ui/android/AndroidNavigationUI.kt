@@ -1,10 +1,9 @@
 package lib.ui.android
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
 import lib.ui.NavigationUI
+import org.openqa.selenium.remote.RemoteWebDriver
 
-open class AndroidNavigationUI(driver: AppiumDriver<MobileElement>?) : NavigationUI(driver)
+open class AndroidNavigationUI(driver: RemoteWebDriver?) : NavigationUI(driver)
 {
     init
     {

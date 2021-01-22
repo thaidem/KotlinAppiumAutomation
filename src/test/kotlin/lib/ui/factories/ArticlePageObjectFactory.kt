@@ -1,21 +1,23 @@
 package lib.ui.factories
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
 import lib.Platform
 import lib.ui.ArticlePageObject
 import lib.ui.android.AndroidArticlePageObject
 import lib.ui.ios.IOSArticlePageObject
+import lib.ui.mobile_web.MWArticlePageObject
+import org.openqa.selenium.remote.RemoteWebDriver
 
-open class ArticlePageObjectFactory
-{
+open class ArticlePageObjectFactory{
     companion object {
-        fun get(driver: AppiumDriver<MobileElement>?) : ArticlePageObject
-        {
-            return if(Platform.getInstance().isAndroid()) {
-                AndroidArticlePageObject(driver)
-            } else {
-                IOSArticlePageObject(driver)
+        fun get(driver: RemoteWebDriver?): ArticlePageObject {
+            return when {
+                Platform.getInstance().isAndroid() -> AndroidArticlePageObject(driver)
+
+                Platform.getInstance().isIOS() -> IOSArticlePageObject(driver)
+
+                Platform.getInstance().isMW() -> MWArticlePageObject(driver)
+
+                else -> throw Exception("Unknown platform")
             }
         }
     }

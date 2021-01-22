@@ -1,10 +1,9 @@
 package lib.ui.ios
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
 import lib.ui.ArticlePageObject
+import org.openqa.selenium.remote.RemoteWebDriver
 
-class IOSArticlePageObject(driver: AppiumDriver<MobileElement>?) : ArticlePageObject(driver)
+class IOSArticlePageObject(driver: RemoteWebDriver?) : ArticlePageObject(driver)
 {
     // TODO: 12.01.2021  
 }

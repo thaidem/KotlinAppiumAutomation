@@ -1,10 +1,9 @@
 package lib.ui.ios
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
 import lib.ui.SearchPageObject
+import org.openqa.selenium.remote.RemoteWebDriver
 
-class IOSSearchPageObject(driver: AppiumDriver<MobileElement>?) : SearchPageObject(driver) 
+class IOSSearchPageObject(driver: RemoteWebDriver?) : SearchPageObject(driver)
 {
     // TODO: 12.01.2021  
 }

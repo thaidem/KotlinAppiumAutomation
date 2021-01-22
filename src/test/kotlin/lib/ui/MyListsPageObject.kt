@@ -1,9 +1,8 @@
 package lib.ui
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
+import org.openqa.selenium.remote.RemoteWebDriver
 
-abstract class MyListsPageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver)
+abstract class MyListsPageObject(driver: RemoteWebDriver?) : MainPageObject(driver)
 {
     protected companion object
     {

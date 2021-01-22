@@ -1,9 +1,9 @@
-package lib.ui.android
+package lib.ui.mobile_web
 
 import lib.ui.ArticlePageObject
 import org.openqa.selenium.remote.RemoteWebDriver
 
-open class AndroidArticlePageObject(driver: RemoteWebDriver?) : ArticlePageObject(driver) {
+class MWArticlePageObject(driver: RemoteWebDriver?) : ArticlePageObject(driver) {
     init {
         TITLE = "id~org.wikipedia:id/view_page_title_text"
         FOOTER_ELEMENT = "xpath~//*[contains(@text, 'View page in browser')]"

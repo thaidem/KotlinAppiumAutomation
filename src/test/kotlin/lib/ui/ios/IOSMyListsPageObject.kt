@@ -1,10 +1,9 @@
 package lib.ui.ios
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
 import lib.ui.MyListsPageObject
+import org.openqa.selenium.remote.RemoteWebDriver
 
-class IOSMyListsPageObject(driver: AppiumDriver<MobileElement>?) : MyListsPageObject(driver)
+class IOSMyListsPageObject(driver: RemoteWebDriver?) : MyListsPageObject(driver)
 {
     // TODO: 12.01.2021  
 }

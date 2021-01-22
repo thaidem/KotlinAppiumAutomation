@@ -1,4 +1,3 @@
-emulator @API29 -no-boot-anim -no-snapshot-save -no-audio -no-window -gpu off -debug  -all &
+emulator @and80 -no-boot-anim -no-snapshot-load -no-audio -no-window -gpu off -debug  -all &
 cd C:\Develop\KotlinAppiumAutomation
-export PLATFORM = android
-mvn -Dtest=ArticleTests#testCompareArticleTitle test
+mvn -Ddevice="Android" -Dtest=ArticleTests#testCompareArticleTitle test

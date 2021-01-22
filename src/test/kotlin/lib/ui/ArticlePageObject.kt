@@ -1,10 +1,10 @@
 package lib.ui
 
-import io.appium.java_client.AppiumDriver
-import io.appium.java_client.MobileElement
+import lib.Platform
 import org.openqa.selenium.WebElement
+import org.openqa.selenium.remote.RemoteWebDriver
 
-abstract class ArticlePageObject(driver: AppiumDriver<MobileElement>?) : MainPageObject(driver)
+abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driver)
 {
     protected companion object
     {
@@ -34,7 +34,13 @@ abstract class ArticlePageObject(driver: AppiumDriver<MobileElement>?) : MainPag
     fun getArticleTitle(): String?
     {
         val titleElement = waitForTitleElement()
-        return titleElement?.getAttribute("text")
+        return when {
+            Platform.getInstance().isAndroid() -> titleElement?.getAttribute("text")
+
+            Platform.getInstance().isMW() -> titleElement?.text
+
+            else -> throw Exception("Unknown platform")
+        }
     }
 
     fun swipeToFooter()
