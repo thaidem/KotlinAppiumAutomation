@@ -1,3 +1,4 @@
-emulator @and80 -no-boot-anim -no-snapshot-load -no-audio -no-window -gpu off -debug  -all &
+call start c:\npm\appium &
+start C:\Users\dmitriy.k\AppData\Local\Android\Sdk/emulator/emulator.exe -avd and80 -no-window
 cd C:\Develop\KotlinAppiumAutomation
-mvn -Ddevice="Android" -Dtest=ArticleTests#testCompareArticleTitle test
+mvn -Dtest=ArticleTests#testCompareArticleTitle test
