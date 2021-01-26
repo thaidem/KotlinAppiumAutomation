@@ -6,6 +6,7 @@ import io.appium.java_client.touch.offset.PointOption
 import junit.framework.TestCase
 import lib.Platform
 import lib.PlatformTouchAction
+import org.junit.Assert
 import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.WebElement
@@ -38,6 +39,25 @@ open class MainPageObject(private val driver: RemoteWebDriver?) {
     fun getAmountOfElements(locator: String): Int? {
         val by = this.getLocatorByString(locator)
         return driver?.findElements(by)?.size
+    }
+
+    fun isElementPresent(locator: String) = this.getAmountOfElements(locator)?:0 > 0
+
+    fun tryClickElementWithFewAttempts(locator: String, errorMessage: String, amountOfAttempts: Int) {
+        var currentAttempts = 0
+        var needMoreAttempts = true
+
+        while(needMoreAttempts) {
+            try {
+                this.waitForElementAndClick(locator, errorMessage, 2)
+                needMoreAttempts = false
+            } catch (e: Exception) {
+                if(currentAttempts > amountOfAttempts) {
+                    this.waitForElementAndClick(locator, errorMessage, 2)
+                }
+            }
+            ++currentAttempts
+        }
     }
 
     fun swipeElementToLeft(locator: String, errorMessage: String) {
@@ -91,7 +111,35 @@ open class MainPageObject(private val driver: RemoteWebDriver?) {
         if(Platform.getInstance().isMW()) {
             val jSExecutor: JavascriptExecutor = driver as JavascriptExecutor
             jSExecutor.executeScript("window.scrollBy(0,250)")
+        } else {
+            println(
+                "Method scrollWebPageUp() does nothing for platform ${Platform.getInstance().getPlatformName()}")
         }
+    }
+
+    fun scrollWebPageTillElementNotVisible(locator: String, errorMessage: String, maxSwipes: Int) {
+        var alreadySwipe = 0
+        val element = this.waitForElementPresent(locator, errorMessage)
+
+        while (!this.isElementLocatedOnTheScreen(locator)) {
+            scrollWebPageUp()
+            alreadySwipe++
+
+            if(alreadySwipe > maxSwipes) {
+                Assert.assertTrue(errorMessage, element!!.isDisplayed)
+            }
+        }
+    }
+
+    private fun isElementLocatedOnTheScreen(locator: String): Boolean {
+        var elementLocationByY = this.waitForElementPresent(locator, "Cannot find element", 1)?.location?.getY()
+        if (Platform.getInstance().isMW()) {
+            val jSExecutor: JavascriptExecutor = driver as JavascriptExecutor
+            val jsResult = jSExecutor.executeScript("return window.pageYOffset")
+            elementLocationByY = elementLocationByY?.minus(jsResult.toString().toInt())
+        }
+        val screenSizeByY = driver?.manage()?.window()?.size?.height
+        return elementLocationByY ?: 0 < screenSizeByY ?: 0
     }
 
     fun swipeUpToFindElement(locator: String, errorMessage: String, maxSwipes: Int) {

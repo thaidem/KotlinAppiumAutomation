@@ -5,10 +5,11 @@ import org.openqa.selenium.remote.RemoteWebDriver
 
 class MWArticlePageObject(driver: RemoteWebDriver?) : ArticlePageObject(driver) {
     init {
-        TITLE = "id~org.wikipedia:id/view_page_title_text"
-        FOOTER_ELEMENT = "xpath~//*[contains(@text, 'View page in browser')]"
-        OPTIONS_BUTTON = "xpath~//android.widget.ImageView[@content-desc='More options']"
-        OPTIONS_ADD_TO_MY_LIST_BUTTON = "xpath~//*[@text='Add to reading list']"
+        TITLE = "css~div.page-heading h1"
+        FOOTER_ELEMENT = "css~footer"
+        OPTIONS_BUTTON = ""
+        OPTIONS_ADD_TO_MY_LIST_BUTTON = "css~#page-actions a#ca-watch.menu__item--page-actions-watch"
+        OPTIONS_REMOVE_FROM_MY_LIST_BUTTON = "css~#page-actions a#ca-watch.watched"
         ADD_TO_MY_LIST_OVERLAY = "id~org.wikipedia:id/onboarding_button"
         MY_LIST_NAME_INPUT = "id~org.wikipedia:id/text_input"
         MY_LIST_OK_BUTTON = "xpath~//*[@text='OK']"

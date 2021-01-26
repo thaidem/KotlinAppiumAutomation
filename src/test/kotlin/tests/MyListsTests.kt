@@ -1,6 +1,8 @@
 package tests
 
 import lib.CoreTestCase
+import lib.Platform
+import lib.ui.AuthorizationPageObject
 import lib.ui.factories.ArticlePageObjectFactory
 import lib.ui.factories.MyListsPageObjectFactory
 import lib.ui.factories.NavigationUIFactory
@@ -21,7 +23,11 @@ class MyListsTests : CoreTestCase()
 
         searchPageObject.inputSearchRequest(request)
         searchPageObject.clickByArticleWithTitle(articleTitle1)
-        articlePageObject.addArticleToMyList(nameFolder)
+        if(Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyList(nameFolder)
+        } else {
+            articlePageObject.addArticleToMySaved()
+        }
         articlePageObject.closeArticle()
 
         searchPageObject.inputSearchRequest(request)
@@ -46,22 +52,46 @@ class MyListsTests : CoreTestCase()
     {
         val searchPageObject = SearchPageObjectFactory.get(driver)
         val nameFolder = "Learning programming"
+        val login= "dementyK"
+        val password = "dementy19"
 
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language")
+        searchPageObject.clickByArticleWithSubstring("bject-oriented programming language")
 
         val articlePageObject = ArticlePageObjectFactory.get(driver)
         articlePageObject.waitForTitleElement()
         val articleTitle = articlePageObject.getArticleTitle()
-        articlePageObject.addArticleToMyList(nameFolder)
+        println(articleTitle)
+
+        if(Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyList(nameFolder)
+        } else {
+            articlePageObject.addArticleToMySaved()
+        }
+
+        if(Platform.getInstance().isMW()) {
+            val auth = AuthorizationPageObject(driver)
+            auth.clickButton()
+            auth.enterLoginData(login, password)
+            auth.submitForm()
+
+            articlePageObject.waitForTitleElement()
+            assertEquals("We are not on the same page after login", articleTitle, articlePageObject.getArticleTitle())
+            articlePageObject.addArticleToMySaved()
+        }
         articlePageObject.closeArticle()
 
         val navigationUI = NavigationUIFactory.get(driver)
+        navigationUI.openNavigation()
         navigationUI.clickMyLists()
 
         val myListsPageObject = MyListsPageObjectFactory.get(driver)
-        myListsPageObject.openFolderByName(nameFolder)
+
+        if(Platform.getInstance().isAndroid()) {
+            myListsPageObject.openFolderByName(nameFolder)
+        }
+
         myListsPageObject.swipeByArticleToDelete(articleTitle.toString())
     }
 }

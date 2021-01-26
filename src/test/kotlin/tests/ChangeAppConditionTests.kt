@@ -1,16 +1,18 @@
 package tests
 
 import lib.CoreTestCase
+import lib.Platform
 import lib.ui.factories.ArticlePageObjectFactory
 import lib.ui.factories.SearchPageObjectFactory
 import org.junit.Test
 import java.time.Duration
 
-class ChangeAppConditionTests : CoreTestCase()
-{
+class ChangeAppConditionTests : CoreTestCase() {
     @Test
-    fun testChangeScreenOrientationOnSearchResult()
-    {
+    fun testChangeScreenOrientationOnSearchResult() {
+        if(Platform.getInstance().isMW()) {
+            return
+        }
         val searchPageObject = SearchPageObjectFactory.get(driver)
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")
@@ -20,16 +22,22 @@ class ChangeAppConditionTests : CoreTestCase()
         val titleBeforeRotation = articlePageObject.getArticleTitle()
         this.rotateScreenLandscape()
         val titleAfterRotation = articlePageObject.getArticleTitle()
-        assertEquals("Article title have been changed after screen rotation", titleBeforeRotation, titleAfterRotation )
+        assertEquals("Article title have been changed after screen rotation", titleBeforeRotation, titleAfterRotation)
 
         this.rotateScreenPortrait()
         val titleAfterSecondRotation = articlePageObject.getArticleTitle()
-        assertEquals("Article title have been changed after second screen rotation", titleBeforeRotation, titleAfterSecondRotation )
+        assertEquals(
+            "Article title have been changed after second screen rotation",
+            titleBeforeRotation,
+            titleAfterSecondRotation
+        )
     }
 
     @Test
-    fun testCheckArticleInBackground()
-    {
+    fun testCheckArticleInBackground() {
+        if(Platform.getInstance().isMW()) {
+            return
+        }
         val searchPageObject = SearchPageObjectFactory.get(driver)
         searchPageObject.initSearchInput()
         searchPageObject.typeSearchLine("Java")

@@ -17,6 +17,6 @@ class MWSearchPageObject(driver: RemoteWebDriver?) : SearchPageObject(driver) {
         SEARCH_RESULT_LIST = "xpath~*//ul[contains(@class,'page-list')]/child::li[contains(@class,'page-summary')]"
         SEARCH_RESULT_TITLE_LIST = "xpath~*//ul[contains(@class,'page-list')]/child::li[contains(@class,'page-summary')]"
         SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL =
-            "xpath~a[contains(@class,'title')]/child::h3[contains(text(),'Java')] | //a[contains(@class,'title')]/child::div[contains(@class,'wikidata-description') and contains(text(),'{DESCRIPTION}')]"
+            "xpath~//a[contains(@class,'title')]/child::h3[contains(text(),'{TITLE}')] | //a[contains(@class,'title')]/child::div[contains(@class,'wikidata-description') and contains(text(),'{DESCRIPTION}')]"
     }
 }
