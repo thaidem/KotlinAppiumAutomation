@@ -9,7 +9,9 @@ import lib.PlatformTouchAction
 import org.junit.Assert
 import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
+import org.openqa.selenium.Keys
 import org.openqa.selenium.WebElement
+import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
@@ -191,7 +193,18 @@ open class MainPageObject(private val driver: RemoteWebDriver?) {
         timeoutInSeconds: Long
     ): WebElement? {
         val element = waitForElementPresent(locator, errorMessage, timeoutInSeconds)
-        element?.sendKeys(value)
+        Actions(driver).moveToElement(element).sendKeys(value).perform()
+//        element?.sendKeys(value)
+        return element
+    }
+
+    fun waitForElementAndTAB(
+        locator: String,
+        errorMessage: String,
+        timeoutInSeconds: Long
+    ): WebElement? {
+        val element = waitForElementPresent(locator, errorMessage, timeoutInSeconds)
+        element?.sendKeys(Keys.TAB)
         return element
     }
 
@@ -269,4 +282,10 @@ open class MainPageObject(private val driver: RemoteWebDriver?) {
             else -> throw IllegalArgumentException("Cannot get type of locator. locator '$locator'")
         }
     }
+
+    fun refresh() {
+        driver?.navigate()?.refresh()
+    }
+
+    fun getURL(): String? = driver?.currentUrl
 }

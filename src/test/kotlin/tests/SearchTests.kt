@@ -94,6 +94,6 @@ class SearchTests : CoreTestCase() {
         searchPageObject.typeSearchLine("$title $description")
         val amountOfElements = searchPageObject.waitForElementByTitleAndDescription(title, description)
         println(amountOfElements)
-        assertTrue("Amount Of Elements less 3", amountOfElements ?: 0 >= 1)
+        assertTrue("Amount Of Elements less 3", amountOfElements ?: 0 >= 3)
     }
 }

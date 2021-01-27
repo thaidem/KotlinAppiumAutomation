@@ -39,8 +39,7 @@ abstract class MyListsPageObject(driver: RemoteWebDriver?) : MainPageObject(driv
             this.waitForElementAndClick(removeLocator, "Cannot click button to remove article from saved", 10)
         }
         if(Platform.getInstance().isMW()) {
-            Platform.getInstance().getDriver().navigate().refresh()
-
+            this.refresh()
         }
         this.waitForArticleToDisappearByTitle(articleTitle)
     }
@@ -59,5 +58,4 @@ abstract class MyListsPageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         val articleTitleXpath = getSavedArticleXpathByTitle(articleTitle)
         this.waitForElementAndClick(articleTitleXpath, "Cannot find saved article '$articleTitle'", 5)
     }
-
 }

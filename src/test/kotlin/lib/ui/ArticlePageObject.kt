@@ -29,7 +29,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
     }
 
     fun getArticleTitle(): String? {
-        Thread.sleep(5000)
+        Thread.sleep(2000)
         val titleElement = waitForTitleElement()
         return when {
             Platform.getInstance().isAndroid() -> titleElement?.getAttribute("text")
@@ -38,6 +38,15 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
 
             else -> throw Exception("Unknown platform")
         }
+    }
+
+    fun getURLArticle(): String? {
+        if(Platform.getInstance().isMW()) {
+            return getURL()?.replace('_', ' ')
+        } else {
+            println("Method getURLArticle() does nothing for platform ${Platform.getInstance().getPlatformName()}")
+        }
+        return null
     }
 
     fun swipeToFooter() {
@@ -73,6 +82,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         if(Platform.getInstance().isMW()) {
             this.removeArticleFromSavedIfItAdded()
         }
+        Thread.sleep(2000)
         this.waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Cannot find option to add article to reading list", 5)
     }
 
