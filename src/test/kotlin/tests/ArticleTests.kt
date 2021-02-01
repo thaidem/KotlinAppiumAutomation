@@ -1,13 +1,23 @@
 package tests
 
+import io.qameta.allure.*
+import io.qameta.allure.junit4.DisplayName
 import lib.CoreTestCase
 import lib.ui.factories.ArticlePageObjectFactory
 import lib.ui.factories.SearchPageObjectFactory
+import org.junit.Assert
 import org.junit.Test
 
+@Epic("Тесты для статей")
 class ArticleTests : CoreTestCase()
 {
     @Test
+    @Features(Feature("Search"), Feature("Article"))
+    @DisplayName("Compare article title with expected one")
+    @Description("Мы открываем статью 'Java object-oriented programming language' " +
+            "и проверяем, что открыта именно она")
+    @Step("Starting testCompareArticleTitle")
+    @Severity(SeverityLevel.BLOCKER)
     fun testCompareArticleTitle()
     {
         val searchPageObject = SearchPageObjectFactory.get(driver)
@@ -19,7 +29,7 @@ class ArticleTests : CoreTestCase()
         articlePageObject.waitForTitleElement()
         val articleTitle = articlePageObject.getArticleTitle()
 
-        assertEquals(
+        Assert.assertEquals(
             "We see unexpected title",
             "Java (programming language)",
             articleTitle
@@ -27,6 +37,11 @@ class ArticleTests : CoreTestCase()
     }
 
     @Test
+    @Features(Feature("Search"), Feature("Article"), Feature("Swipe"))
+    @DisplayName("Swipe article to the footer")
+    @Description("Открываем статью и скроллим ее до футера")
+    @Step("Starting testSwipeArticle")
+    @Severity(SeverityLevel.MINOR)
     fun testSwipeArticle()
     {
         val searchPageObject = SearchPageObjectFactory.get(driver)
@@ -40,6 +55,11 @@ class ArticleTests : CoreTestCase()
     }
 
     @Test
+    @Features(Feature("Search"), Feature("Article"))
+    @DisplayName("Проверка наличия заголовка в статье")
+    @Description("Проверяем, что название статьи в поиске соответствует заголовку в открытой статье")
+    @Step("Starting testCheckTitlePresent")
+    @Severity(SeverityLevel.NORMAL)
     fun testCheckTitlePresent()
     {
         val searchPageObject = SearchPageObjectFactory.get(driver)

@@ -4,6 +4,7 @@ import lib.CoreTestCase
 import lib.Platform
 import lib.ui.factories.ArticlePageObjectFactory
 import lib.ui.factories.SearchPageObjectFactory
+import org.junit.Assert
 import org.junit.Test
 import java.time.Duration
 
@@ -22,11 +23,11 @@ class ChangeAppConditionTests : CoreTestCase() {
         val titleBeforeRotation = articlePageObject.getArticleTitle()
         this.rotateScreenLandscape()
         val titleAfterRotation = articlePageObject.getArticleTitle()
-        assertEquals("Article title have been changed after screen rotation", titleBeforeRotation, titleAfterRotation)
+        Assert.assertEquals("Article title have been changed after screen rotation", titleBeforeRotation, titleAfterRotation)
 
         this.rotateScreenPortrait()
         val titleAfterSecondRotation = articlePageObject.getArticleTitle()
-        assertEquals(
+        Assert.assertEquals(
             "Article title have been changed after second screen rotation",
             titleBeforeRotation,
             titleAfterSecondRotation

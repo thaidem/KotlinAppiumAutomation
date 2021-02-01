@@ -1,5 +1,6 @@
 package lib.ui
 
+import io.qameta.allure.Step
 import lib.Platform
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.remote.RemoteWebDriver
@@ -24,13 +25,16 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
     }
     /*TEMPLATES METHODS*/
 
+    @Step("Ожидание появления заголовка")
     fun waitForTitleElement(): WebElement? {
         return this.waitForElementPresent(TITLE, "Cannot find article title on page!", 15)
     }
 
+    @Step("Получение заголовка статьи")
     fun getArticleTitle(): String? {
         Thread.sleep(2000)
         val titleElement = waitForTitleElement()
+        screenshot(this.takeScreenShot("at"))
         return when {
             Platform.getInstance().isAndroid() -> titleElement?.getAttribute("text")
 
@@ -40,6 +44,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         }
     }
 
+    @Step("Получение URL статьи")
     fun getURLArticle(): String? {
         if(Platform.getInstance().isMW()) {
             return getURL()?.replace('_', ' ')
@@ -49,6 +54,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         return null
     }
 
+    @Step("Свайп до футера")
     fun swipeToFooter() {
         if(Platform.getInstance().isAndroid()) {
             this.swipeUpToFindElement(FOOTER_ELEMENT, "Cannot find the end of the article", 40)
@@ -57,6 +63,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         }
     }
 
+    @Step("Добавление статьи  в папку '{nameFolder}'")
     fun addArticleToMyList(nameFolder: String) {
 
         this.waitForElementAndClick(OPTIONS_BUTTON, "Cannot find button to open article options", 30)
@@ -78,6 +85,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         }
     }
 
+    @Step("Добавление статьи в избранное")
     fun addArticleToMySaved() {
         if(Platform.getInstance().isMW()) {
             this.removeArticleFromSavedIfItAdded()
@@ -86,6 +94,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         this.waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Cannot find option to add article to reading list", 5)
     }
 
+    @Step("Удаление статьи из избранных и новое добавление в избранное")
     private fun removeArticleFromSavedIfItAdded() {
         if (this.isElementPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON)) {
             this.waitForElementAndClick(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON, "Cannot click to remove an article from saved", 2)
@@ -93,7 +102,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         }
     }
 
-
+    @Step("Закрытие статьи")
     fun closeArticle() {
         if(Platform.getInstance().isAndroid()) {
             this.waitForElementAndClick(CLOSE_ARTICLE_BUTTON, "Cannot close article, cannot find X link", 5)
@@ -104,6 +113,7 @@ abstract class ArticlePageObject(driver: RemoteWebDriver?) : MainPageObject(driv
         }
     }
 
+    @Step("Утверждение, что заголовок статьи присутствует")
     fun assertArticleTitlePresent() {
         this.assertElementsPresent(TITLE, "Cannot find article title")
     }
